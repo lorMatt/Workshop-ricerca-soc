@@ -1,6 +1,6 @@
 if (!require("pacman")) install.packages("pacman")
 library(pacman)
-p_load(tidyverse, ggplot2, readr, ggridges, AER, forcats)
+p_load(tidyverse, ggplot2, readr, ggridges, AER, forcats, tidymodels)
 library(AER)
 
 # Import data ------------------------------------------------------------------
@@ -39,7 +39,16 @@ df |>
 df <- df |> 
   mutate(income2 = income^2)
 
-summary(lm(formula = read ~ english + income2, data = df))
+### def reg
+lm <- linear_reg() |> set_engine('lm')
+
+### fit
+lm_fit <- lm |> fit(read ~ english + income2, data = df)
+
+### plot
+lm_fit |> 
+  extract_fit_engine() |> 
+  summary()
 
 # Comunicare i risultati ----
 ## escaping flatland
